@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+        int n = grid.size();
+        vector<pair<int,int>> ds = {{0,1}, {1,0}, {-1, 0}, {0, -1}};
+
+        vector<vector<bool>> visited(n, vector<bool>(n,false));
+        // visited[0][0] = true;
+
+        map<int, vector<pair<int, int>>> levels= { {grid[0][0], vector<pair<int,int>>{{0,0}}} };
+
+        // for (auto& [t, elems]: levels) { // implies current t +1
+        while (!levels.empty()) {
+            auto [t, elems] = *levels.begin();
+            levels.erase(t);
+
+            deque<pair<int,int>> q(elems.begin(), elems.end());
+
+            while (!q.empty()) {
+               auto [cx, cy] = q.front();
+               q.pop_front();
+
+                if (cx == n-1 && cy == n-1) {return t;}
+                if (visited[cx][cy]) {continue;}
+                visited[cx][cy] = true;
+
+                for (auto [dx, dy]: ds) {
+                    int nx = cx+dx, ny = cy+dy;
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= n || visited[nx][ny]) { continue; }
+                    int nt = grid[nx][ny];
+
+                    if (nt <= t) {
+                        q.push_back({nx,ny});
+                    } else {
+                        levels[nt].push_back({nx,ny});
+                    }
+
+                }
+
+            }
+        }
+
+        return -1;
+    }
+};
