@@ -1,38 +1,22 @@
-/*
-    Given an array of people's weight, people[i] is the weight of the ith person, 
-    and there is an infinite number of boats where each boat can carry a maximum weight of limit. 
-    Each boat carries at most two people at the same time, provided the sum of the weight of those people is at most limit.
-    Return minimum number of boats to carry every given person.
-
-    sort, while there is people to carry 
-    carry the heaviest and lightest person provided their weight doesn't exceed limit.
-    otherwise, carry the heaviest person only
-
-    Time: O(n)
-    Space: O(1)
-*/
-
 class Solution {
 public:
     int numRescueBoats(vector<int>& people, int limit) {
+        int ctr{};
+        int n = people.size();
         sort(people.begin(), people.end());
-        
-        int boatRequired = 0;
-        int lightestPerson = 0;
-        int heaviestPerson = people.size()-1;
 
-        //WHILE THERE IS SOMEONE TO CARRY
-        while (lightestPerson <= heaviestPerson){
-            if(people[lightestPerson] + people[heaviestPerson] <= limit){
-                --heaviestPerson;
-                ++lightestPerson;
+        int r = n- 1, l = 0;
+        for (; l <= r; ++l) {
+            while (l < r && people[l] + people[r] > limit) {
+                ++ctr;
+                --r;
             }
-            else{
-                --heaviestPerson;
-            }
-            ++boatRequired;
+            // l == r || ppl l  + pplr < limit
+            ++ctr;
+            --r;
+
         }
 
-        return boatRequired;
+        return ctr;
     }
 };
