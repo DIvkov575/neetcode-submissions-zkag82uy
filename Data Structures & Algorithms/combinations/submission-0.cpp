@@ -1,27 +1,35 @@
 class Solution {
-private:
-    void backtrack(int start, int n, int k, vector<int> &combination, vector<vector<int>> &res){
-            //base case, when size of combination is k, we wanna stop
-            if(combination.size() == k){
-                res.push_back(combination);
-                return;
-            }
-
-            for(int i = start; i<=n; i++){
-                combination.push_back(i);
-                backtrack(i+1, n, k, combination, res);
-                combination.pop_back();
-            }
-        }
 public:
     vector<vector<int>> combine(int n, int k) {
-        vector<vector<int>> res;
+        vector<vector<int>> out;
+        out.reserve(1024); //...
 
-        //initial empty list to pass to the backtrack function
-        vector<int> emptyCombination;
 
-        backtrack(1, n, k, emptyCombination, res);
+        // n; 1,2,3,4,5,6
+        // k = 3
 
-        return res;
+        vector<int> buf;
+        buf.reserve(k);
+        auto dfs = [&](this auto&& self, int top_num, int depth){
+            if (depth == k+1) {
+                out.push_back(buf);
+                return; // pop?
+            }
+
+            // buf.push_back(top_num);  
+            // k - depth // how amyn we must place
+            for (int i = top_num; i <= n - k + depth; ++i) {
+                buf.push_back(i);
+                self(i+1, depth+1);
+                buf.pop_back();
+            }
+        };
+
+        dfs(1, 1);
+        return out;
+
+
+
+        
     }
 };
